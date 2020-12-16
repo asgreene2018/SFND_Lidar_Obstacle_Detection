@@ -2,7 +2,7 @@
 
 #ifndef PROCESSPOINTCLOUDS_H_
 #define PROCESSPOINTCLOUDS_H_
-
+#include "quiz/cluster/kdtree.h"
 #include <pcl/io/pcd_io.h>
 #include <pcl/common/common.h>
 #include <pcl/filters/extract_indices.h>
@@ -18,6 +18,8 @@
 #include <ctime>
 #include <chrono>
 #include "render/box.h"
+#include <unordered_set>
+
 
 template<typename PointT>
 class ProcessPointClouds {
@@ -27,6 +29,12 @@ public:
     ProcessPointClouds();
     //deconstructor
     ~ProcessPointClouds();
+
+    std::vector<std::vector<int>> euclideanCluster(const std::vector<std::vector<float>>& points, KdTree* tree, float distanceTol);
+
+    void clusterHelper(int indice, const std::vector<std::vector<float>> points, std::vector<int>& cluster, std::vector<bool>& processed, KdTree* tree, float distanceTol);
+
+    std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> RansacPlane(typename pcl::PointCloud<PointT>::Ptr cloud, int maxIterations, float distanceTol);
 
     void numPoints(typename pcl::PointCloud<PointT>::Ptr cloud);
 
